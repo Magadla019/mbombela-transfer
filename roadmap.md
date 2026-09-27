@@ -1,0 +1,3 @@
+- [ ] Build splash, login, client pages, forms, tracking and reviews.
+- [ ] Build partner and driver dashboard workflows and demo data interactions.
+- [ ] Verify mobile and desktop views and build diagnostics.

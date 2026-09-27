@@ -1,0 +1,12 @@
+export type OrderStatus = 'pending'|'accepted'|'picked'|'delivering'|'arrived'|'completed'|'canceled';
+export type Order = { id: number; customerName: string; pickupAddress: string; deliveryAddress: string; phone: string; amount: number; status: OrderStatus; type: string; brand?: string; driverLiveLocation?: {lat:number;lng:number}; distance?: number; eta?: number; createdAt: string; notes?: string };
+export type Review = { id:number; name:string; location:string; service:string; rating:number; text:string; date:string; approved:boolean; avatar:string };
+export const read = <T,>(key:string):T[] => { if(typeof window==='undefined') return []; try { return JSON.parse(localStorage.getItem(key)||'[]') as T[] } catch { return [] } };
+export const orders = () => read<Order>('mbombela_orders');
+export const reviews = () => read<Review>('mbombela_reviews');
+export const saveOrders = (items:Order[]) => { localStorage.setItem('mbombela_orders',JSON.stringify(items)); window.dispatchEvent(new Event('transfer-update')) };
+export const saveReviews = (items:Review[]) => { localStorage.setItem('mbombela_reviews',JSON.stringify(items)); window.dispatchEvent(new Event('transfer-update')) };
+export const addOrder = (data:Partial<Order> & Pick<Order,'type'|'pickupAddress'|'deliveryAddress'|'customerName'|'phone'>) => { const order:Order={...data,id:Date.now(),amount:Math.floor(Math.random()*76)+45,status:'pending',createdAt:new Date().toISOString(),distance:2.3,eta:55}; saveOrders([...orders(),order]); return order };
+export const updateOrder = (id:number,patch:Partial<Order>) => saveOrders(orders().map(o=>o.id===id?{...o,...patch}:o));
+export const brandNames=['KFC','Nandos','Panarottos','Spur','Debonairs','Fish Aways','Galitos','Mugg & Bean','Salsa','Rocomamas'];
+export const randOrderNumber=(id:number)=>String(id).slice(-6);
