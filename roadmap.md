@@ -1,0 +1,3 @@
+- [x] Build splash, login, client pages, forms, tracking, and reviews.
+- [x] Build partner and driver dashboards with demo order workflows.
+- [x] Check desktop/mobile presentation and parcel-to-delivery flow.
