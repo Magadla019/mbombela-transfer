@@ -1,5 +1,13 @@
 {
   "version": "7",
   "dialect": "postgresql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1790568413603,
+      "tag": "0000_mbombela_core",
+      "breakpoints": true
+    }
+  ]
 }
