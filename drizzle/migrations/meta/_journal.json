@@ -8,6 +8,13 @@
       "when": 1790568413603,
       "tag": "0000_mbombela_core",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790568424881,
+      "tag": "0001_order_proofs_upload",
+      "breakpoints": true
     }
   ]
 }
