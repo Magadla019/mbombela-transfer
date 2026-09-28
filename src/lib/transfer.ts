@@ -1,12 +1,28 @@
+import type { Tables } from '@/integrations/supabase/types';
+import { supabase } from '@/integrations/supabase/client';
+
+export type Order = Tables<'orders'>;
+export type Review = Tables<'reviews'>;
 export type OrderStatus = 'pending'|'accepted'|'picked'|'delivering'|'arrived'|'completed'|'canceled';
-export type Order = { id: number; customerName: string; pickupAddress: string; deliveryAddress: string; phone: string; amount: number; status: OrderStatus; type: string; brand?: string; driverLiveLocation?: {lat:number;lng:number}; distance?: number; eta?: number; createdAt: string; notes?: string };
-export type Review = { id:number; name:string; location:string; service:string; rating:number; text:string; date:string; approved:boolean; avatar:string };
-export const read = <T,>(key:string):T[] => { if(typeof window==='undefined') return []; try { return JSON.parse(localStorage.getItem(key)||'[]') as T[] } catch { return [] } };
-export const orders = () => read<Order>('mbombela_orders');
-export const reviews = () => read<Review>('mbombela_reviews');
-export const saveOrders = (items:Order[]) => { localStorage.setItem('mbombela_orders',JSON.stringify(items)); window.dispatchEvent(new Event('transfer-update')) };
-export const saveReviews = (items:Review[]) => { localStorage.setItem('mbombela_reviews',JSON.stringify(items)); window.dispatchEvent(new Event('transfer-update')) };
-export const addOrder = (data:Partial<Order> & Pick<Order,'type'|'pickupAddress'|'deliveryAddress'|'customerName'|'phone'>) => { const order:Order={...data,id:Date.now(),amount:Math.floor(Math.random()*76)+45,status:'pending',createdAt:new Date().toISOString(),distance:2.3,eta:55}; saveOrders([...orders(),order]); return order };
-export const updateOrder = (id:number,patch:Partial<Order>) => saveOrders(orders().map(o=>o.id===id?{...o,...patch}:o));
+
 export const brandNames=['KFC','Nandos','Panarottos','Spur','Debonairs','Fish Aways','Galitos','Mugg & Bean','Salsa','Rocomamas'];
-export const randOrderNumber=(id:number)=>String(id).slice(-6);
+
+// Only small pointers live in the browser: staff session token, role, driver id and the last order id for guest tracking.
+export const getStaffToken = () => (typeof window === 'undefined' ? '' : localStorage.getItem('mbombela_staff_token') || '');
+export const setStaff = (role: string, token: string) => { localStorage.setItem('mbombela_role', role); localStorage.setItem('mbombela_staff_token', token); };
+export const clearStaff = () => { localStorage.removeItem('mbombela_role'); localStorage.removeItem('mbombela_staff_token'); };
+export const driverId = () => { let id = localStorage.getItem('mbombela_driver_id'); if (!id) { id = crypto.randomUUID(); localStorage.setItem('mbombela_driver_id', id); } return id; };
+export const lastOrderId = () => (typeof window === 'undefined' ? null : localStorage.getItem('mbombela_last_order'));
+export const setLastOrderId = (id: string) => localStorage.setItem('mbombela_last_order', id);
+
+export async function uploadProofs(files: (File | null | undefined)[]) {
+  const paths: string[] = [];
+  for (const file of files) {
+    if (!file || !file.size) continue;
+    const path = `${crypto.randomUUID()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+    const { error } = await supabase.storage.from('order-proofs').upload(path, file);
+    if (error) throw new Error('Upload failed: ' + error.message);
+    paths.push(path);
+  }
+  return paths;
+}

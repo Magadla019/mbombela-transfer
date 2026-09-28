@@ -14,7 +14,177 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      drivers_live: {
+        Row: {
+          driver_id: string
+          is_online: boolean
+          lat: number | null
+          lng: number | null
+          updated_at: string
+        }
+        Insert: {
+          driver_id: string
+          is_online?: boolean
+          lat?: number | null
+          lng?: number | null
+          updated_at?: string
+        }
+        Update: {
+          driver_id?: string
+          is_online?: boolean
+          lat?: number | null
+          lng?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          amount: number
+          brand: string | null
+          created_at: string
+          customer_name: string | null
+          customer_phone: string | null
+          delivery_address: string | null
+          delivery_details: string | null
+          distance: string | null
+          driver_id: string | null
+          driver_lat: number | null
+          driver_lng: number | null
+          driver_name: string | null
+          driver_phone: string | null
+          eta: string | null
+          id: string
+          order_number: string
+          order_type: string
+          package_description: string | null
+          package_type: string | null
+          payment_method: string
+          pickup_address: string | null
+          pickup_details: string | null
+          proof_paths: string[]
+          receiver_name: string | null
+          receiver_phone: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          amount?: number
+          brand?: string | null
+          created_at?: string
+          customer_name?: string | null
+          customer_phone?: string | null
+          delivery_address?: string | null
+          delivery_details?: string | null
+          distance?: string | null
+          driver_id?: string | null
+          driver_lat?: number | null
+          driver_lng?: number | null
+          driver_name?: string | null
+          driver_phone?: string | null
+          eta?: string | null
+          id?: string
+          order_number: string
+          order_type?: string
+          package_description?: string | null
+          package_type?: string | null
+          payment_method?: string
+          pickup_address?: string | null
+          pickup_details?: string | null
+          proof_paths?: string[]
+          receiver_name?: string | null
+          receiver_phone?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          brand?: string | null
+          created_at?: string
+          customer_name?: string | null
+          customer_phone?: string | null
+          delivery_address?: string | null
+          delivery_details?: string | null
+          distance?: string | null
+          driver_id?: string | null
+          driver_lat?: number | null
+          driver_lng?: number | null
+          driver_name?: string | null
+          driver_phone?: string | null
+          eta?: string | null
+          id?: string
+          order_number?: string
+          order_type?: string
+          package_description?: string | null
+          package_type?: string | null
+          payment_method?: string
+          pickup_address?: string | null
+          pickup_details?: string | null
+          proof_paths?: string[]
+          receiver_name?: string | null
+          receiver_phone?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          full_name: string | null
+          id: string
+          phone: string | null
+          role: string
+        }
+        Insert: {
+          full_name?: string | null
+          id: string
+          phone?: string | null
+          role?: string
+        }
+        Update: {
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          role?: string
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          approved: boolean
+          created_at: string
+          id: string
+          location: string | null
+          name: string
+          photo_url: string | null
+          rating: number
+          service: string | null
+          text: string
+        }
+        Insert: {
+          approved?: boolean
+          created_at?: string
+          id?: string
+          location?: string | null
+          name: string
+          photo_url?: string | null
+          rating?: number
+          service?: string | null
+          text: string
+        }
+        Update: {
+          approved?: boolean
+          created_at?: string
+          id?: string
+          location?: string | null
+          name?: string
+          photo_url?: string | null
+          rating?: number
+          service?: string | null
+          text?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

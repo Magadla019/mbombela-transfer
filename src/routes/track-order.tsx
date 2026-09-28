@@ -9,5 +9,6 @@ export const Route = createFileRoute('/track-order')({
     { property: 'og:type', content: 'website' },
     { name: 'twitter:card', content: 'summary_large_image' },
   ] }),
+  validateSearch: (s: Record<string, unknown>): { orderId?: string } => (typeof s['orderId'] === 'string' ? { orderId: s['orderId'] } : {}),
   component: () => <TrackPage />,
 });
