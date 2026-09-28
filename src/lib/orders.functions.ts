@@ -1,9 +1,10 @@
 import { createServerFn } from '@tanstack/react-start';
 import { z } from 'zod';
+import type { Database } from '@/integrations/supabase/types';
 import { issueStaffToken, roleForCode, verifyStaffToken } from './staff-token.server';
 
 const admin = async () => (await import('@/integrations/supabase/client.server')).supabaseAdmin;
-const s = (max = 500) => z.string().trim().max(max).optional().nullable();
+const s = (max = 500) => z.string().trim().max(max).nullable().optional().transform((v) => v ?? null);
 
 const orderInput = z.object({
   customer_name: z.string().trim().min(1).max(120),
@@ -98,7 +99,7 @@ export const driverAction = createServerFn({ method: 'POST' })
     const { data: current } = await db.from('orders').select('status, distance, eta').eq('id', data.id).single();
     if (!current) throw new Error('Order not found');
     const pos = data.lat != null && data.lng != null ? { driver_lat: data.lat, driver_lng: data.lng } : {};
-    let patch: Record<string, unknown> = {};
+    let patch: Database['public']['Tables']['orders']['Update'] = {};
     if (data.action === 'cancel') {
       if (!['pending', 'accepted'].includes(current.status)) throw new Error('Cannot cancel now');
       patch = { status: 'canceled' };
@@ -106,7 +107,7 @@ export const driverAction = createServerFn({ method: 'POST' })
       if (role !== 'driver') throw new Error('Forbidden');
       if (data.action === 'accept') {
         if (current.status !== 'pending') throw new Error('Order already taken');
-        patch = { status: 'accepted', driver_id: data.driver_id, driver_name: data.driver_name, driver_phone: data.driver_phone, ...pos };
+        patch = { status: 'accepted', driver_id: data.driver_id ?? null, driver_name: data.driver_name ?? null, driver_phone: data.driver_phone ?? null, ...pos };
       } else if (data.action === 'picked') patch = { status: 'picked', ...pos };
       else if (data.action === 'arrived') patch = { status: 'arrived', ...pos };
       else {

@@ -17,7 +17,7 @@ export function verifyStaffToken(token: string | undefined, allowed?: StaffRole[
   if (!token) throw new Error('Unauthorized');
   const parts = token.split('.');
   if (parts.length !== 3) throw new Error('Unauthorized');
-  const [role, exp, sig] = parts;
+  const [role = '', exp = '', sig = ''] = parts;
   const expected = sign(`${role}.${exp}`);
   const a = Buffer.from(sig);
   const b = Buffer.from(expected);
