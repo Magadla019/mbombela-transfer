@@ -9,5 +9,6 @@
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
 
-- Keep Mbombela page views and local demo data in shared client modules with thin TanStack route leaves; this makes the multi-page prototype consistent without a connected backend.
 - Treat access-code dashboard entry as demo-only presentation, never server-side authorization; browser storage cannot secure business data.
+- Orders, drivers_live and staff review moderation go through server functions (src/lib/orders.functions.ts) with a signed staff token; those tables have no public RLS policies because access codes are not real accounts and customer data must not be publicly readable.
+- Dashboards and tracking refresh every 3s via server functions instead of browser realtime, since browser realtime would require public read access to orders.
