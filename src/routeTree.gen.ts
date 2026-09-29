@@ -17,6 +17,8 @@ import { Route as FoodOrderFormRouteImport } from './routes/food-order-form'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PartnerDashboardRouteImport } from './routes/partner-dashboard'
 import { Route as PaxiFormRouteImport } from './routes/paxi-form'
+import { Route as PaxiReceiveRouteImport } from './routes/paxi-receive'
+import { Route as PaxiSendRouteImport } from './routes/paxi-send'
 import { Route as ReceiveParcelFormRouteImport } from './routes/receive-parcel-form'
 import { Route as RequestTypeRouteImport } from './routes/request-type'
 import { Route as ReviewsRouteImport } from './routes/reviews'
@@ -63,6 +65,16 @@ const PaxiFormRoute = PaxiFormRouteImport.update({
   path: '/paxi-form',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PaxiReceiveRoute = PaxiReceiveRouteImport.update({
+  id: '/paxi-receive',
+  path: '/paxi-receive',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaxiSendRoute = PaxiSendRouteImport.update({
+  id: '/paxi-send',
+  path: '/paxi-send',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReceiveParcelFormRoute = ReceiveParcelFormRouteImport.update({
   id: '/receive-parcel-form',
   path: '/receive-parcel-form',
@@ -98,6 +110,8 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/partner-dashboard': typeof PartnerDashboardRoute
   '/paxi-form': typeof PaxiFormRoute
+  '/paxi-receive': typeof PaxiReceiveRoute
+  '/paxi-send': typeof PaxiSendRoute
   '/receive-parcel-form': typeof ReceiveParcelFormRoute
   '/request-type': typeof RequestTypeRoute
   '/reviews': typeof ReviewsRoute
@@ -113,6 +127,8 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/partner-dashboard': typeof PartnerDashboardRoute
   '/paxi-form': typeof PaxiFormRoute
+  '/paxi-receive': typeof PaxiReceiveRoute
+  '/paxi-send': typeof PaxiSendRoute
   '/receive-parcel-form': typeof ReceiveParcelFormRoute
   '/request-type': typeof RequestTypeRoute
   '/reviews': typeof ReviewsRoute
@@ -129,6 +145,8 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/partner-dashboard': typeof PartnerDashboardRoute
   '/paxi-form': typeof PaxiFormRoute
+  '/paxi-receive': typeof PaxiReceiveRoute
+  '/paxi-send': typeof PaxiSendRoute
   '/receive-parcel-form': typeof ReceiveParcelFormRoute
   '/request-type': typeof RequestTypeRoute
   '/reviews': typeof ReviewsRoute
@@ -146,6 +164,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/partner-dashboard'
     | '/paxi-form'
+    | '/paxi-receive'
+    | '/paxi-send'
     | '/receive-parcel-form'
     | '/request-type'
     | '/reviews'
@@ -161,6 +181,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/partner-dashboard'
     | '/paxi-form'
+    | '/paxi-receive'
+    | '/paxi-send'
     | '/receive-parcel-form'
     | '/request-type'
     | '/reviews'
@@ -176,6 +198,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/partner-dashboard'
     | '/paxi-form'
+    | '/paxi-receive'
+    | '/paxi-send'
     | '/receive-parcel-form'
     | '/request-type'
     | '/reviews'
@@ -192,6 +216,8 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   PartnerDashboardRoute: typeof PartnerDashboardRoute
   PaxiFormRoute: typeof PaxiFormRoute
+  PaxiReceiveRoute: typeof PaxiReceiveRoute
+  PaxiSendRoute: typeof PaxiSendRoute
   ReceiveParcelFormRoute: typeof ReceiveParcelFormRoute
   RequestTypeRoute: typeof RequestTypeRoute
   ReviewsRoute: typeof ReviewsRoute
@@ -257,6 +283,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PaxiFormRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/paxi-receive': {
+      id: '/paxi-receive'
+      path: '/paxi-receive'
+      fullPath: '/paxi-receive'
+      preLoaderRoute: typeof PaxiReceiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/paxi-send': {
+      id: '/paxi-send'
+      path: '/paxi-send'
+      fullPath: '/paxi-send'
+      preLoaderRoute: typeof PaxiSendRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/receive-parcel-form': {
       id: '/receive-parcel-form'
       path: '/receive-parcel-form'
@@ -304,6 +344,8 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   PartnerDashboardRoute: PartnerDashboardRoute,
   PaxiFormRoute: PaxiFormRoute,
+  PaxiReceiveRoute: PaxiReceiveRoute,
+  PaxiSendRoute: PaxiSendRoute,
   ReceiveParcelFormRoute: ReceiveParcelFormRoute,
   RequestTypeRoute: RequestTypeRoute,
   ReviewsRoute: ReviewsRoute,
