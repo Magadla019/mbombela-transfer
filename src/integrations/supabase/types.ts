@@ -42,6 +42,7 @@ export type Database = {
         Row: {
           amount: number
           brand: string | null
+          completed_at: string | null
           created_at: string
           customer_name: string | null
           customer_phone: string | null
@@ -54,6 +55,7 @@ export type Database = {
           driver_name: string | null
           driver_phone: string | null
           eta: string | null
+          extra: Json
           id: string
           order_number: string
           order_type: string
@@ -62,15 +64,18 @@ export type Database = {
           payment_method: string
           pickup_address: string | null
           pickup_details: string | null
+          proof_deleted_at: string | null
           proof_paths: string[]
           receiver_name: string | null
           receiver_phone: string | null
           status: string
+          status_times: Json
           updated_at: string
         }
         Insert: {
           amount?: number
           brand?: string | null
+          completed_at?: string | null
           created_at?: string
           customer_name?: string | null
           customer_phone?: string | null
@@ -83,6 +88,7 @@ export type Database = {
           driver_name?: string | null
           driver_phone?: string | null
           eta?: string | null
+          extra?: Json
           id?: string
           order_number: string
           order_type?: string
@@ -91,15 +97,18 @@ export type Database = {
           payment_method?: string
           pickup_address?: string | null
           pickup_details?: string | null
+          proof_deleted_at?: string | null
           proof_paths?: string[]
           receiver_name?: string | null
           receiver_phone?: string | null
           status?: string
+          status_times?: Json
           updated_at?: string
         }
         Update: {
           amount?: number
           brand?: string | null
+          completed_at?: string | null
           created_at?: string
           customer_name?: string | null
           customer_phone?: string | null
@@ -112,6 +121,7 @@ export type Database = {
           driver_name?: string | null
           driver_phone?: string | null
           eta?: string | null
+          extra?: Json
           id?: string
           order_number?: string
           order_type?: string
@@ -120,10 +130,12 @@ export type Database = {
           payment_method?: string
           pickup_address?: string | null
           pickup_details?: string | null
+          proof_deleted_at?: string | null
           proof_paths?: string[]
           receiver_name?: string | null
           receiver_phone?: string | null
           status?: string
+          status_times?: Json
           updated_at?: string
         }
         Relationships: []
@@ -156,6 +168,7 @@ export type Database = {
           id: string
           location: string | null
           name: string
+          order_number: string | null
           photo_url: string | null
           rating: number
           service: string | null
@@ -167,6 +180,7 @@ export type Database = {
           id?: string
           location?: string | null
           name: string
+          order_number?: string | null
           photo_url?: string | null
           rating?: number
           service?: string | null
@@ -178,6 +192,7 @@ export type Database = {
           id?: string
           location?: string | null
           name?: string
+          order_number?: string | null
           photo_url?: string | null
           rating?: number
           service?: string | null

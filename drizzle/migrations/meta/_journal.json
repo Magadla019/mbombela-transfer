@@ -15,6 +15,13 @@
       "when": 1790568424881,
       "tag": "0001_order_proofs_upload",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790690649712,
+      "tag": "0002_payment_flow_and_paxi",
+      "breakpoints": true
     }
   ]
 }
