@@ -5,7 +5,7 @@ export type Order = Tables<'orders'>;
 export type Review = Tables<'reviews'>;
 export type OrderStatus = 'pending'|'accepted'|'picked'|'delivering'|'arrived'|'completed'|'canceled';
 
-export const brandNames=['KFC','Nandos','Panarottos','Spur','Debonairs','Fish Aways','Galitos','Mugg & Bean','Salsa','Rocomamas'];
+export const brandNames=['KFC','Nandos','Panarottis','Rocomamas','Spur','Debonairs','Fish Aways','Galitos','Mugg & Bean'];
 
 // Only small pointers live in the browser: staff session token, role, driver id and the last order id for guest tracking.
 export const getStaffToken = () => (typeof window === 'undefined' ? '' : localStorage.getItem('mbombela_staff_token') || '');

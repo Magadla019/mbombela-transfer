@@ -1,10 +1,13 @@
 import { createServerFn } from '@tanstack/react-start';
 import { z } from 'zod';
-import type { Database } from '@/integrations/supabase/types';
+import type { Database, Json } from '@/integrations/supabase/types';
 import { issueStaffToken, roleForCode, verifyStaffToken } from './staff-token.server';
 
 const admin = async () => (await import('@/integrations/supabase/client.server')).supabaseAdmin;
 const s = (max = 500) => z.string().trim().max(max).nullable().optional().transform((v) => v ?? null);
+const now = () => new Date().toISOString();
+
+export const PAXI_BAGS = { small: 60, medium: 80, large: 110, xl: 150 } as const;
 
 const orderInput = z.object({
   customer_name: z.string().trim().min(1).max(120),
@@ -18,25 +21,34 @@ const orderInput = z.object({
   package_type: s(60),
   package_description: s(1000),
   brand: s(60),
-  order_type: z.enum(['send', 'receive', 'food', 'paxi']),
+  order_type: z.enum(['send', 'receive', 'food', 'paxi', 'paxi_receive', 'paxi_send']),
   proof_paths: z.array(z.string().max(300)).max(5).optional(),
+  extra: z.record(z.string().max(60), z.string().max(500)).optional(),
 });
 
 export const createOrder = createServerFn({ method: 'POST' })
   .inputValidator((d) => orderInput.parse(d))
   .handler(async ({ data }) => {
     const db = await admin();
-    const order_number = 'MB-' + Date.now();
+    let amount = Math.floor(Math.random() * 76) + 45;
+    let prefix = 'MB-';
+    if (data.order_type === 'paxi_receive') { amount = 50; prefix = 'MB-PAXI-R-'; }
+    if (data.order_type === 'paxi_send') {
+      const bag = data.extra?.['paxi_bag_type'] as keyof typeof PAXI_BAGS | undefined;
+      if (!bag || !(bag in PAXI_BAGS)) throw new Error('Choose a PAXI bag');
+      amount = PAXI_BAGS[bag]; prefix = 'MB-PAXI-S-';
+    }
+    const order_number = prefix + Date.now();
     const { data: row, error } = await db
       .from('orders')
-      .insert({ ...data, proof_paths: data.proof_paths ?? [], order_number, amount: Math.floor(Math.random() * 76) + 45, status: 'pending', distance: '2.3', eta: '55' })
+      .insert({ ...data, extra: (data.extra ?? {}) as Json, proof_paths: data.proof_paths ?? [], order_number, amount, status: 'pending', distance: '2.3', eta: '55', status_times: { pending: now() } })
       .select('id, order_number')
       .single();
     if (error) throw new Error(error.message);
     return row;
   });
 
-const publicCols = 'id, order_number, pickup_address, delivery_address, order_type, brand, amount, status, driver_name, driver_phone, driver_lat, driver_lng, distance, eta, created_at, updated_at';
+const publicCols = 'id, order_number, pickup_address, delivery_address, order_type, brand, amount, status, payment_method, driver_name, driver_phone, driver_lat, driver_lng, distance, eta, status_times, created_at, updated_at';
 
 export const getOrder = createServerFn({ method: 'GET' })
   .inputValidator((d) => z.object({ id: z.string().uuid() }).parse(d))
@@ -46,14 +58,23 @@ export const getOrder = createServerFn({ method: 'GET' })
     return row;
   });
 
+async function setStatus(id: string, from: string[], status: string, patch: Database['public']['Tables']['orders']['Update'] = {}) {
+  const db = await admin();
+  const { data: cur } = await db.from('orders').select('status, status_times').eq('id', id).single();
+  if (!cur || !from.includes(cur.status)) throw new Error('This step is not available right now');
+  const times = { ...((cur.status_times as Record<string, string>) ?? {}), [status]: now() };
+  const { error } = await db.from('orders').update({ ...patch, status, status_times: times }).eq('id', id);
+  if (error) throw new Error(error.message);
+}
+
+// Client confirms the rider arrived -> payment step.
 export const confirmDelivery = createServerFn({ method: 'POST' })
   .inputValidator((d) => z.object({ id: z.string().uuid() }).parse(d))
-  .handler(async ({ data }) => {
-    const db = await admin();
-    const { error } = await db.from('orders').update({ status: 'completed' }).eq('id', data.id).eq('status', 'arrived');
-    if (error) throw new Error(error.message);
-    return { ok: true };
-  });
+  .handler(async ({ data }) => { await setStatus(data.id, ['arrived'], 'payment_pending'); return { ok: true }; });
+
+export const choosePayment = createServerFn({ method: 'POST' })
+  .inputValidator((d) => z.object({ id: z.string().uuid(), method: z.enum(['Cash', 'Card']) }).parse(d))
+  .handler(async ({ data }) => { await setStatus(data.id, ['payment_pending'], 'payment_verifying', { payment_method: data.method }); return { ok: true }; });
 
 export const staffLogin = createServerFn({ method: 'POST' })
   .inputValidator((d) => z.object({ code: z.string().max(100) }).parse(d))
@@ -81,11 +102,22 @@ export const staffData = createServerFn({ method: 'POST' })
     return { role, orders: orders ?? [], reviews };
   });
 
+// Short-lived private links so staff can check slips / ID / parcel photos.
+export const staffProofUrls = createServerFn({ method: 'POST' })
+  .inputValidator((d) => tok.extend({ paths: z.array(z.string().max(300)).max(10) }).parse(d))
+  .handler(async ({ data }) => {
+    verifyStaffToken(data.token);
+    if (!data.paths.length) return [];
+    const db = await admin();
+    const { data: signed } = await db.storage.from('order-proofs').createSignedUrls(data.paths, 3600);
+    return (signed ?? []).map((x) => ({ path: x.path ?? '', url: x.signedUrl })).filter((x) => x.url);
+  });
+
 export const driverAction = createServerFn({ method: 'POST' })
   .inputValidator((d) =>
     tok.extend({
       id: z.string().uuid(),
-      action: z.enum(['accept', 'picked', 'arrived', 'cancel', 'location']),
+      action: z.enum(['accept', 'picked', 'delivering', 'arrived', 'cancel', 'location', 'money_received']),
       driver_id: z.string().uuid().optional(),
       driver_name: z.string().max(80).optional(),
       driver_phone: z.string().max(30).optional(),
@@ -96,31 +128,35 @@ export const driverAction = createServerFn({ method: 'POST' })
   .handler(async ({ data }) => {
     const role = verifyStaffToken(data.token);
     const db = await admin();
-    const { data: current } = await db.from('orders').select('status, distance, eta').eq('id', data.id).single();
+    const { data: current } = await db.from('orders').select('status, distance, eta, proof_paths').eq('id', data.id).single();
     if (!current) throw new Error('Order not found');
     const pos = data.lat != null && data.lng != null ? { driver_lat: data.lat, driver_lng: data.lng } : {};
-    let patch: Database['public']['Tables']['orders']['Update'] = {};
-    if (data.action === 'cancel') {
-      if (!['pending', 'accepted'].includes(current.status)) throw new Error('Cannot cancel now');
-      patch = { status: 'canceled' };
-    } else {
-      if (role !== 'driver') throw new Error('Forbidden');
-      if (data.action === 'accept') {
-        if (current.status !== 'pending') throw new Error('Order already taken');
-        patch = { status: 'accepted', driver_id: data.driver_id ?? null, driver_name: data.driver_name ?? null, driver_phone: data.driver_phone ?? null, ...pos };
-      } else if (data.action === 'picked') patch = { status: 'picked', ...pos };
-      else if (data.action === 'arrived') patch = { status: 'arrived', ...pos };
-      else {
+    if (data.driver_id && data.lat != null && data.lng != null) {
+      await db.from('drivers_live').upsert({ driver_id: data.driver_id, lat: data.lat, lng: data.lng, is_online: true, updated_at: now() });
+    }
+    if (data.action === 'cancel') { await setStatus(data.id, ['pending', 'accepted'], 'canceled'); return { ok: true }; }
+    if (role !== 'driver') throw new Error('Forbidden');
+    switch (data.action) {
+      case 'accept':
+        await setStatus(data.id, ['pending'], 'accepted', { driver_id: data.driver_id ?? null, driver_name: data.driver_name ?? null, driver_phone: data.driver_phone ?? null, ...pos });
+        break;
+      case 'picked': await setStatus(data.id, ['accepted'], 'picked', pos); break;
+      case 'delivering': await setStatus(data.id, ['picked'], 'delivering', pos); break;
+      case 'arrived': await setStatus(data.id, ['picked', 'delivering'], 'arrived', pos); break;
+      case 'money_received': {
+        await setStatus(data.id, ['payment_verifying'], 'completed', { completed_at: now() });
+        // POPIA: remove slips / ID / parcel photos once the order is done.
+        const paths = current.proof_paths ?? [];
+        if (paths.length) await db.storage.from('order-proofs').remove(paths);
+        await db.from('orders').update({ proof_paths: [], proof_deleted_at: now() }).eq('id', data.id);
+        break;
+      }
+      default: {
         const d = Math.max(0.1, Number(current.distance ?? 2.3) - 0.05);
         const e = Math.max(1, Number(current.eta ?? 55) - 0.5);
-        patch = { ...pos, distance: d.toFixed(1), eta: String(Math.round(e * 10) / 10) };
-      }
-      if (data.driver_id && data.lat != null && data.lng != null) {
-        await db.from('drivers_live').upsert({ driver_id: data.driver_id, lat: data.lat, lng: data.lng, is_online: true, updated_at: new Date().toISOString() });
+        await db.from('orders').update({ ...pos, distance: d.toFixed(1), eta: String(Math.round(e * 10) / 10) }).eq('id', data.id);
       }
     }
-    const { error } = await db.from('orders').update(patch).eq('id', data.id);
-    if (error) throw new Error(error.message);
     return { ok: true };
   });
 
@@ -129,8 +165,40 @@ export const reviewAction = createServerFn({ method: 'POST' })
   .handler(async ({ data }) => {
     verifyStaffToken(data.token, ['partner']);
     const db = await admin();
-    const q = data.action === 'approve' ? db.from('reviews').update({ approved: true }).eq('id', data.id) : db.from('reviews').delete().eq('id', data.id);
-    const { error } = await q;
-    if (error) throw new Error(error.message);
+    if (data.action === 'approve') {
+      const { error } = await db.from('reviews').update({ approved: true }).eq('id', data.id);
+      if (error) throw new Error(error.message);
+    } else {
+      const { data: r } = await db.from('reviews').select('photo_url').eq('id', data.id).maybeSingle();
+      if (r?.photo_url) await db.storage.from('order-proofs').remove([r.photo_url]);
+      const { error } = await db.from('reviews').delete().eq('id', data.id);
+      if (error) throw new Error(error.message);
+    }
     return { ok: true };
+  });
+
+// Staff: signed links for review photos.
+export const reviewPhotoUrls = createServerFn({ method: 'POST' })
+  .inputValidator((d) => tok.parse(d))
+  .handler(async ({ data }) => {
+    verifyStaffToken(data.token, ['partner']);
+    const db = await admin();
+    const { data: rows } = await db.from('reviews').select('id, photo_url').not('photo_url', 'is', null);
+    const paths = (rows ?? []).map((r) => r.photo_url!).filter(Boolean);
+    if (!paths.length) return {} as Record<string, string>;
+    const { data: signed } = await db.storage.from('order-proofs').createSignedUrls(paths, 3600);
+    const byPath = new Map((signed ?? []).map((x) => [x.path, x.signedUrl]));
+    return Object.fromEntries((rows ?? []).map((r) => [r.id, byPath.get(r.photo_url!) ?? ''])) as Record<string, string>;
+  });
+
+// Public: approved reviews only, with temporary photo links.
+export const approvedReviews = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    const db = await admin();
+    const { data: rows } = await db.from('reviews').select('id, name, location, service, rating, text, photo_url, created_at').eq('approved', true).order('created_at', { ascending: false }).limit(10);
+    const list = rows ?? [];
+    const paths = list.map((r) => r.photo_url).filter((p): p is string => !!p);
+    const signed = paths.length ? (await db.storage.from('order-proofs').createSignedUrls(paths, 3600)).data ?? [] : [];
+    const byPath = new Map(signed.map((x) => [x.path, x.signedUrl]));
+    return list.map((r) => ({ ...r, photo_url: r.photo_url ? byPath.get(r.photo_url) ?? null : null }));
   });
