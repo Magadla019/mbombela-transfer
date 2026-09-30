@@ -22,6 +22,13 @@
       "when": 1790690649712,
       "tag": "0002_payment_flow_and_paxi",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1790751218758,
+      "tag": "0003_final_build_schema",
+      "breakpoints": true
     }
   ]
 }

@@ -14,6 +14,72 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_pricing: {
+        Row: {
+          category: string
+          id: string
+          is_active: boolean
+          label: string | null
+          price: number
+          sub_category: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          id?: string
+          is_active?: boolean
+          label?: string | null
+          price?: number
+          sub_category: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          id?: string
+          is_active?: boolean
+          label?: string | null
+          price?: number
+          sub_category?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      driver_access: {
+        Row: {
+          created_at: string
+          driver_name: string | null
+          driver_phone: string | null
+          first_login: boolean
+          id: string
+          is_active: boolean
+          password: string
+          total_completed: number
+          total_income: number
+        }
+        Insert: {
+          created_at?: string
+          driver_name?: string | null
+          driver_phone?: string | null
+          first_login?: boolean
+          id?: string
+          is_active?: boolean
+          password: string
+          total_completed?: number
+          total_income?: number
+        }
+        Update: {
+          created_at?: string
+          driver_name?: string | null
+          driver_phone?: string | null
+          first_login?: boolean
+          id?: string
+          is_active?: boolean
+          password?: string
+          total_completed?: number
+          total_income?: number
+        }
+        Relationships: []
+      }
       drivers_live: {
         Row: {
           driver_id: string
@@ -41,7 +107,10 @@ export type Database = {
       orders: {
         Row: {
           amount: number
+          assigned_at: string | null
           brand: string | null
+          client_popup_shown: boolean
+          client_popup_state: string | null
           completed_at: string | null
           created_at: string
           customer_name: string | null
@@ -54,6 +123,8 @@ export type Database = {
           driver_lng: number | null
           driver_name: string | null
           driver_phone: string | null
+          driver_popup_shown: boolean
+          driver_popup_state: string | null
           eta: string | null
           extra: Json
           id: string
@@ -61,6 +132,8 @@ export type Database = {
           order_type: string
           package_description: string | null
           package_type: string | null
+          paxi_bag_type: string | null
+          paxi_tracking: string | null
           payment_method: string
           pickup_address: string | null
           pickup_details: string | null
@@ -70,11 +143,15 @@ export type Database = {
           receiver_phone: string | null
           status: string
           status_times: Json
+          type: string
           updated_at: string
         }
         Insert: {
           amount?: number
+          assigned_at?: string | null
           brand?: string | null
+          client_popup_shown?: boolean
+          client_popup_state?: string | null
           completed_at?: string | null
           created_at?: string
           customer_name?: string | null
@@ -87,6 +164,8 @@ export type Database = {
           driver_lng?: number | null
           driver_name?: string | null
           driver_phone?: string | null
+          driver_popup_shown?: boolean
+          driver_popup_state?: string | null
           eta?: string | null
           extra?: Json
           id?: string
@@ -94,6 +173,8 @@ export type Database = {
           order_type?: string
           package_description?: string | null
           package_type?: string | null
+          paxi_bag_type?: string | null
+          paxi_tracking?: string | null
           payment_method?: string
           pickup_address?: string | null
           pickup_details?: string | null
@@ -103,11 +184,15 @@ export type Database = {
           receiver_phone?: string | null
           status?: string
           status_times?: Json
+          type?: string
           updated_at?: string
         }
         Update: {
           amount?: number
+          assigned_at?: string | null
           brand?: string | null
+          client_popup_shown?: boolean
+          client_popup_state?: string | null
           completed_at?: string | null
           created_at?: string
           customer_name?: string | null
@@ -120,6 +205,8 @@ export type Database = {
           driver_lng?: number | null
           driver_name?: string | null
           driver_phone?: string | null
+          driver_popup_shown?: boolean
+          driver_popup_state?: string | null
           eta?: string | null
           extra?: Json
           id?: string
@@ -127,6 +214,8 @@ export type Database = {
           order_type?: string
           package_description?: string | null
           package_type?: string | null
+          paxi_bag_type?: string | null
+          paxi_tracking?: string | null
           payment_method?: string
           pickup_address?: string | null
           pickup_details?: string | null
@@ -136,6 +225,7 @@ export type Database = {
           receiver_phone?: string | null
           status?: string
           status_times?: Json
+          type?: string
           updated_at?: string
         }
         Relationships: []
@@ -158,6 +248,27 @@ export type Database = {
           id?: string
           phone?: string | null
           role?: string
+        }
+        Relationships: []
+      }
+      refresh_logs: {
+        Row: {
+          action_type: string
+          created_at: string
+          id: string
+          section: string | null
+        }
+        Insert: {
+          action_type: string
+          created_at?: string
+          id?: string
+          section?: string | null
+        }
+        Update: {
+          action_type?: string
+          created_at?: string
+          id?: string
+          section?: string | null
         }
         Relationships: []
       }
