@@ -12,9 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as ClientHomeRouteImport } from './routes/client-home'
+import { Route as DriverControlCenterRouteImport } from './routes/driver-control-center'
 import { Route as DriverDashboardRouteImport } from './routes/driver-dashboard'
+import { Route as DriverHomeRouteImport } from './routes/driver-home'
 import { Route as FoodOrderFormRouteImport } from './routes/food-order-form'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as OrderHistoryRouteImport } from './routes/order-history'
 import { Route as PartnerDashboardRouteImport } from './routes/partner-dashboard'
 import { Route as PaxiFormRouteImport } from './routes/paxi-form'
 import { Route as PaxiReceiveRouteImport } from './routes/paxi-receive'
@@ -40,9 +43,19 @@ const ClientHomeRoute = ClientHomeRouteImport.update({
   path: '/client-home',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DriverControlCenterRoute = DriverControlCenterRouteImport.update({
+  id: '/driver-control-center',
+  path: '/driver-control-center',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DriverDashboardRoute = DriverDashboardRouteImport.update({
   id: '/driver-dashboard',
   path: '/driver-dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DriverHomeRoute = DriverHomeRouteImport.update({
+  id: '/driver-home',
+  path: '/driver-home',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FoodOrderFormRoute = FoodOrderFormRouteImport.update({
@@ -53,6 +66,11 @@ const FoodOrderFormRoute = FoodOrderFormRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrderHistoryRoute = OrderHistoryRouteImport.update({
+  id: '/order-history',
+  path: '/order-history',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PartnerDashboardRoute = PartnerDashboardRouteImport.update({
@@ -105,9 +123,12 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/client-home': typeof ClientHomeRoute
+  '/driver-control-center': typeof DriverControlCenterRoute
   '/driver-dashboard': typeof DriverDashboardRoute
+  '/driver-home': typeof DriverHomeRoute
   '/food-order-form': typeof FoodOrderFormRoute
   '/login': typeof LoginRoute
+  '/order-history': typeof OrderHistoryRoute
   '/partner-dashboard': typeof PartnerDashboardRoute
   '/paxi-form': typeof PaxiFormRoute
   '/paxi-receive': typeof PaxiReceiveRoute
@@ -122,9 +143,12 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/client-home': typeof ClientHomeRoute
+  '/driver-control-center': typeof DriverControlCenterRoute
   '/driver-dashboard': typeof DriverDashboardRoute
+  '/driver-home': typeof DriverHomeRoute
   '/food-order-form': typeof FoodOrderFormRoute
   '/login': typeof LoginRoute
+  '/order-history': typeof OrderHistoryRoute
   '/partner-dashboard': typeof PartnerDashboardRoute
   '/paxi-form': typeof PaxiFormRoute
   '/paxi-receive': typeof PaxiReceiveRoute
@@ -140,9 +164,12 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/client-home': typeof ClientHomeRoute
+  '/driver-control-center': typeof DriverControlCenterRoute
   '/driver-dashboard': typeof DriverDashboardRoute
+  '/driver-home': typeof DriverHomeRoute
   '/food-order-form': typeof FoodOrderFormRoute
   '/login': typeof LoginRoute
+  '/order-history': typeof OrderHistoryRoute
   '/partner-dashboard': typeof PartnerDashboardRoute
   '/paxi-form': typeof PaxiFormRoute
   '/paxi-receive': typeof PaxiReceiveRoute
@@ -159,9 +186,12 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/client-home'
+    | '/driver-control-center'
     | '/driver-dashboard'
+    | '/driver-home'
     | '/food-order-form'
     | '/login'
+    | '/order-history'
     | '/partner-dashboard'
     | '/paxi-form'
     | '/paxi-receive'
@@ -176,9 +206,12 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/client-home'
+    | '/driver-control-center'
     | '/driver-dashboard'
+    | '/driver-home'
     | '/food-order-form'
     | '/login'
+    | '/order-history'
     | '/partner-dashboard'
     | '/paxi-form'
     | '/paxi-receive'
@@ -193,9 +226,12 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/client-home'
+    | '/driver-control-center'
     | '/driver-dashboard'
+    | '/driver-home'
     | '/food-order-form'
     | '/login'
+    | '/order-history'
     | '/partner-dashboard'
     | '/paxi-form'
     | '/paxi-receive'
@@ -211,9 +247,12 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ClientHomeRoute: typeof ClientHomeRoute
+  DriverControlCenterRoute: typeof DriverControlCenterRoute
   DriverDashboardRoute: typeof DriverDashboardRoute
+  DriverHomeRoute: typeof DriverHomeRoute
   FoodOrderFormRoute: typeof FoodOrderFormRoute
   LoginRoute: typeof LoginRoute
+  OrderHistoryRoute: typeof OrderHistoryRoute
   PartnerDashboardRoute: typeof PartnerDashboardRoute
   PaxiFormRoute: typeof PaxiFormRoute
   PaxiReceiveRoute: typeof PaxiReceiveRoute
@@ -248,11 +287,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientHomeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/driver-control-center': {
+      id: '/driver-control-center'
+      path: '/driver-control-center'
+      fullPath: '/driver-control-center'
+      preLoaderRoute: typeof DriverControlCenterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/driver-dashboard': {
       id: '/driver-dashboard'
       path: '/driver-dashboard'
       fullPath: '/driver-dashboard'
       preLoaderRoute: typeof DriverDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/driver-home': {
+      id: '/driver-home'
+      path: '/driver-home'
+      fullPath: '/driver-home'
+      preLoaderRoute: typeof DriverHomeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/food-order-form': {
@@ -267,6 +320,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/order-history': {
+      id: '/order-history'
+      path: '/order-history'
+      fullPath: '/order-history'
+      preLoaderRoute: typeof OrderHistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/partner-dashboard': {
@@ -339,9 +399,12 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ClientHomeRoute: ClientHomeRoute,
+  DriverControlCenterRoute: DriverControlCenterRoute,
   DriverDashboardRoute: DriverDashboardRoute,
+  DriverHomeRoute: DriverHomeRoute,
   FoodOrderFormRoute: FoodOrderFormRoute,
   LoginRoute: LoginRoute,
+  OrderHistoryRoute: OrderHistoryRoute,
   PartnerDashboardRoute: PartnerDashboardRoute,
   PaxiFormRoute: PaxiFormRoute,
   PaxiReceiveRoute: PaxiReceiveRoute,
