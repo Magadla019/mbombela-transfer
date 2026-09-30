@@ -10,10 +10,11 @@ export const brandNames=['KFC','Nandos','Panarottis','Rocomamas','Spur','Debonai
 // Only small pointers live in the browser: staff session token, role, driver id and the last order id for guest tracking.
 export const getStaffToken = () => (typeof window === 'undefined' ? '' : localStorage.getItem('mbombela_staff_token') || '');
 export const setStaff = (role: string, token: string) => { localStorage.setItem('mbombela_role', role); localStorage.setItem('mbombela_staff_token', token); };
-export const clearStaff = () => { localStorage.removeItem('mbombela_role'); localStorage.removeItem('mbombela_staff_token'); };
+export const clearStaff = () => { ['mbombela_role','mbombela_staff_token','driver_id','driver_name','driver_phone'].forEach((k) => localStorage.removeItem(k)); };
 export const driverId = () => { let id = localStorage.getItem('mbombela_driver_id'); if (!id) { id = crypto.randomUUID(); localStorage.setItem('mbombela_driver_id', id); } return id; };
 export const lastOrderId = () => (typeof window === 'undefined' ? null : localStorage.getItem('mbombela_last_order'));
-export const setLastOrderId = (id: string) => localStorage.setItem('mbombela_last_order', id);
+export const myOrderIds = (): string[] => { if (typeof window === 'undefined') return []; try { const v = JSON.parse(localStorage.getItem('mbombela_my_orders') || '[]'); return Array.isArray(v) ? v.filter((x) => typeof x === 'string').slice(0, 100) : []; } catch { return []; } };
+export const setLastOrderId = (id: string) => { localStorage.setItem('mbombela_last_order', id); const ids = myOrderIds().filter((x) => x !== id); localStorage.setItem('mbombela_my_orders', JSON.stringify([id, ...ids].slice(0, 100))); };
 
 export async function uploadProofs(files: (File | null | undefined)[]) {
   const paths: string[] = [];
