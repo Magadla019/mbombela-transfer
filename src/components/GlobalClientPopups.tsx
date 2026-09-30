@@ -17,7 +17,7 @@ export function GlobalClientPopups() {
   const [order, setOrder] = useState<O | null>(null);
   const [ready, setReady] = useState(false);
   const [pay, setPay] = useState<'Cash' | 'Card'>('Cash');
-  const timer = useRef<ReturnType<typeof setTimeout>>();
+  const timer = useRef<ReturnType<typeof setTimeout>|undefined>(undefined);
 
   useEffect(() => {
     if (staff) return;

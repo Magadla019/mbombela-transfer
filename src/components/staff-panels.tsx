@@ -23,14 +23,14 @@ export type DriverRow = Awaited<ReturnType<typeof listDrivers>>[number];
 export function useDrivers() {
   const [drivers, setDrivers] = useState<DriverRow[]>([]);
   const load = () => listDrivers({ data: { token: getStaffToken() } }).then(setDrivers).catch(() => {});
-  useEffect(() => { load(); const t = setInterval(load, 5000); return () => clearInterval(t); }, []);
+  useEffect(() => { void load(); const t = setInterval(load, 5000); return () => clearInterval(t); }, []);
   return { drivers, load };
 }
 
-function DriverForm({ driver, onDone }: { driver?: DriverRow; onDone: () => void }) {
+function DriverForm({ driver, onDone }: { driver?: DriverRow | undefined; onDone: () => void }) {
   const [name, setName] = useState(driver?.driver_name ?? ''); const [phone, setPhone] = useState(driver?.driver_phone ?? ''); const [pw, setPw] = useState(driver?.password ?? ''); const [busy, setBusy] = useState(false);
   const save = async () => {
-    if (pw.trim().length < 4) return toast.error('Password must be at least 4 characters');
+    if (pw.trim().length < 4) { toast.error('Password must be at least 4 characters'); return; }
     setBusy(true);
     try { await saveDriver({ data: { token: getStaffToken(), id: driver?.id, password: pw.trim(), name, phone } }); toast.success(driver ? 'Driver updated' : 'Driver added'); onDone(); }
     catch (e) { toast.error(e instanceof Error ? e.message : 'Could not save'); } finally { setBusy(false); }
@@ -99,7 +99,7 @@ export function PricingPanel() {
   </div>;
 }
 
-type Section = Parameters<typeof refreshAction>[0]['data']['section'];
+type Section = 'orders_new' | 'orders_completed' | 'orders_canceled' | 'orders_paid' | 'orders_all' | 'clients' | 'drivers' | 'reviews' | 'revenue' | 'all';
 const groups: { icon: string; label: string; section?: Section; sub?: [string, Section][] }[] = [
   { icon: '📦', label: 'Orders', sub: [['New', 'orders_new'], ['Completed', 'orders_completed'], ['Canceled', 'orders_canceled'], ['Paid', 'orders_paid'], ['All', 'orders_all']] },
   { icon: '👥', label: 'Clients', section: 'clients' }, { icon: '🚗', label: 'Drivers', section: 'drivers' },

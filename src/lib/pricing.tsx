@@ -31,7 +31,7 @@ export function usePricing(notify = false) {
   return map;
 }
 
-export function PriceBadge({ row }: { row?: PriceRow }) {
+export function PriceBadge({ row }: { row?: PriceRow | undefined }) {
   if (!row?.label) return null;
   return <span className="ml-2 animate-pulse rounded-full bg-gold px-2 py-0.5 text-[11px] font-bold text-background">{row.label} R{Number(row.price)}</span>;
 }
