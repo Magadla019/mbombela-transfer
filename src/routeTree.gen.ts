@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as ClientHomeRouteImport } from './routes/client-home'
+import { Route as DriverControlCenterRouteImport } from './routes/driver-control-center'
 import { Route as DriverDashboardRouteImport } from './routes/driver-dashboard'
 import { Route as DriverHomeRouteImport } from './routes/driver-home'
 import { Route as FoodOrderFormRouteImport } from './routes/food-order-form'
@@ -40,6 +41,11 @@ const AboutRoute = AboutRouteImport.update({
 const ClientHomeRoute = ClientHomeRouteImport.update({
   id: '/client-home',
   path: '/client-home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DriverControlCenterRoute = DriverControlCenterRouteImport.update({
+  id: '/driver-control-center',
+  path: '/driver-control-center',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DriverDashboardRoute = DriverDashboardRouteImport.update({
@@ -117,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/client-home': typeof ClientHomeRoute
+  '/driver-control-center': typeof DriverControlCenterRoute
   '/driver-dashboard': typeof DriverDashboardRoute
   '/driver-home': typeof DriverHomeRoute
   '/food-order-form': typeof FoodOrderFormRoute
@@ -136,6 +143,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/client-home': typeof ClientHomeRoute
+  '/driver-control-center': typeof DriverControlCenterRoute
   '/driver-dashboard': typeof DriverDashboardRoute
   '/driver-home': typeof DriverHomeRoute
   '/food-order-form': typeof FoodOrderFormRoute
@@ -156,6 +164,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/client-home': typeof ClientHomeRoute
+  '/driver-control-center': typeof DriverControlCenterRoute
   '/driver-dashboard': typeof DriverDashboardRoute
   '/driver-home': typeof DriverHomeRoute
   '/food-order-form': typeof FoodOrderFormRoute
@@ -177,6 +186,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/client-home'
+    | '/driver-control-center'
     | '/driver-dashboard'
     | '/driver-home'
     | '/food-order-form'
@@ -196,6 +206,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/client-home'
+    | '/driver-control-center'
     | '/driver-dashboard'
     | '/driver-home'
     | '/food-order-form'
@@ -215,6 +226,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/client-home'
+    | '/driver-control-center'
     | '/driver-dashboard'
     | '/driver-home'
     | '/food-order-form'
@@ -235,6 +247,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ClientHomeRoute: typeof ClientHomeRoute
+  DriverControlCenterRoute: typeof DriverControlCenterRoute
   DriverDashboardRoute: typeof DriverDashboardRoute
   DriverHomeRoute: typeof DriverHomeRoute
   FoodOrderFormRoute: typeof FoodOrderFormRoute
@@ -272,6 +285,13 @@ declare module '@tanstack/react-router' {
       path: '/client-home'
       fullPath: '/client-home'
       preLoaderRoute: typeof ClientHomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/driver-control-center': {
+      id: '/driver-control-center'
+      path: '/driver-control-center'
+      fullPath: '/driver-control-center'
+      preLoaderRoute: typeof DriverControlCenterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/driver-dashboard': {
@@ -379,6 +399,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ClientHomeRoute: ClientHomeRoute,
+  DriverControlCenterRoute: DriverControlCenterRoute,
   DriverDashboardRoute: DriverDashboardRoute,
   DriverHomeRoute: DriverHomeRoute,
   FoodOrderFormRoute: FoodOrderFormRoute,
