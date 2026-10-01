@@ -36,7 +36,9 @@ export function verifyStaffToken(token: string | undefined, allowed?: StaffRole[
 
 export function fixedRoleForCode(code: string): 'partner' | 'master' | null {
   const c = code.trim();
-  if (c === 'Mbombela Transfer 452') return 'partner';
-  if (c === 'Mbombela Transfer 1141') return 'master';
+  const partner = process.env['PARTNER_ACCESS_CODE'];
+  const master = process.env['MASTER_ACCESS_CODE'];
+  if (partner && c === partner) return 'partner';
+  if (master && c === master) return 'master';
   return null;
 }

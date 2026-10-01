@@ -104,6 +104,30 @@ export type Database = {
         }
         Relationships: []
       }
+      menu_sync_logs: {
+        Row: {
+          created_at: string
+          id: string
+          message: string | null
+          restaurant_slug: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message?: string | null
+          restaurant_slug: string
+          status: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string | null
+          restaurant_slug?: string
+          status?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           amount: number
@@ -269,6 +293,57 @@ export type Database = {
           created_at?: string
           id?: string
           section?: string | null
+        }
+        Relationships: []
+      }
+      restaurant_menus: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_available: boolean
+          is_new: boolean
+          item_name: string
+          last_synced_at: string | null
+          price: number
+          restaurant_name: string
+          restaurant_slug: string
+          source_url: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_available?: boolean
+          is_new?: boolean
+          item_name: string
+          last_synced_at?: string | null
+          price: number
+          restaurant_name: string
+          restaurant_slug: string
+          source_url?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_available?: boolean
+          is_new?: boolean
+          item_name?: string
+          last_synced_at?: string | null
+          price?: number
+          restaurant_name?: string
+          restaurant_slug?: string
+          source_url?: string
+          updated_at?: string
         }
         Relationships: []
       }

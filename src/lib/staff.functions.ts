@@ -33,7 +33,7 @@ export const saveDriver = createServerFn({ method: 'POST' })
   .inputValidator((d) => tok.extend({ id: z.string().uuid().optional(), password: z.string().trim().min(4).max(60), name: z.string().trim().max(80).optional(), phone: z.string().trim().max(30).optional() }).parse(d))
   .handler(async ({ data }) => {
     verifyStaff(data.token, ['partner', 'master']);
-    if (['Mbombela Transfer 452', 'Mbombela Transfer 1141'].includes(data.password)) throw new Error('That password is reserved');
+    if ([process.env['PARTNER_ACCESS_CODE'], process.env['MASTER_ACCESS_CODE']].some((v) => v && data.password === v)) throw new Error('That password is reserved');
     const db = await admin();
     const { data: clash } = await db.from('driver_access').select('id').eq('password', data.password).maybeSingle();
     if (clash && clash.id !== data.id) throw new Error('That password is already used');
