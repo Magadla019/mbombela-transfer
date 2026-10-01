@@ -29,6 +29,13 @@
       "when": 1790751218758,
       "tag": "0003_final_build_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790847084279,
+      "tag": "0004_restaurant_menu_catalogue",
+      "breakpoints": true
     }
   ]
 }
