@@ -53,7 +53,7 @@ export const createOrder = createServerFn({ method: 'POST' })
       .from('orders')
       .insert({
         ...data, extra: (data.extra ?? {}) as Json, proof_paths: data.proof_paths ?? [], order_number, amount, status: 'pending',
-        distance: '2.3', eta: '55', status_times: { pending: now() },
+        distance: null, eta: null, status_times: { pending: now() },
         type: data.order_type.startsWith('paxi') ? 'paxi' : 'delivery', paxi_bag_type: bag, paxi_tracking: data.extra?.['paxi_tracking'] ?? null,
       })
       .select('id, order_number')
@@ -175,10 +175,11 @@ export const driverAction = createServerFn({ method: 'POST' })
     if (!current) throw new Error('Order not found');
     const pos = data.lat != null && data.lng != null ? { driver_lat: data.lat, driver_lng: data.lng } : {};
     if (data.action === 'cancel') {
-      if (role === 'driver' && current.driver_id && current.driver_id !== driverId) throw new Error('Forbidden');
+      if (role === 'driver' && current.driver_id !== driverId) throw new Error('Forbidden');
       await setStatus(data.id, ['pending', 'accepted'], 'canceled'); return { ok: true };
     }
     if (role !== 'driver' || !driverId) throw new Error('Forbidden');
+    if (data.action === 'location' && (data.lat == null || data.lng == null)) throw new Error('Location required');
     if (data.lat != null && data.lng != null) {
       await db.from('drivers_live').upsert({ driver_id: driverId, lat: data.lat, lng: data.lng, is_online: true, updated_at: now() });
     }
@@ -209,9 +210,8 @@ export const driverAction = createServerFn({ method: 'POST' })
         break;
       }
       default: {
-        const d = Math.max(0.1, Number(current.distance ?? 2.3) - 0.05);
-        const e = Math.max(1, Number(current.eta ?? 55) - 0.5);
-        await db.from('orders').update({ ...pos, distance: d.toFixed(1), eta: String(Math.round(e * 10) / 10) }).eq('id', data.id);
+        const { error } = await db.from('orders').update(pos).eq('id', data.id);
+        if (error) throw new Error(error.message);
       }
     }
     return { ok: true };
