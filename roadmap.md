@@ -1,8 +1,10 @@
 - [x] Build splash, login, client pages, forms, tracking, and reviews.
 - [x] Build partner and driver dashboards with demo order workflows.
 - [x] Check desktop/mobile presentation and parcel-to-delivery flow.
-- [ ] Add tenth restaurant, verified menu catalogue and ordering sheet; automate menu updates when official sources are reachable.
-- [ ] Remove exposed staff code hints and unsupported prices; update client navigation, dashboard and login controls.
-- [ ] Replace simulated tracking with real coordinates and protected order access.
+- [x] Add tenth restaurant, user-supplied menu catalogue and ordering sheet.
+- [ ] Verify official menus and licensed food images; automate updates when official sources are reachable.
+- [x] Remove exposed staff code hints and unsupported prices; update client navigation, dashboard and login controls.
+- [x] Remove simulated tracking markers and timing; retain private order access.
+- [ ] Add actual destination coordinates, protected live driver locations, and calculated route/ETA.
 - [ ] Add private authenticated conversations and media, with messaging controls.
-- [ ] Verify desktop/mobile behavior and publish the requested changes.
+- [ ] Finish security review, verify desktop/mobile behavior, and publish the requested changes.
