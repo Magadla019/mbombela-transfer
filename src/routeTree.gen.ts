@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as ClientHomeRouteImport } from './routes/client-home'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as DriverControlCenterRouteImport } from './routes/driver-control-center'
 import { Route as DriverDashboardRouteImport } from './routes/driver-dashboard'
 import { Route as DriverHomeRouteImport } from './routes/driver-home'
@@ -22,6 +23,7 @@ import { Route as PartnerDashboardRouteImport } from './routes/partner-dashboard
 import { Route as PaxiFormRouteImport } from './routes/paxi-form'
 import { Route as PaxiReceiveRouteImport } from './routes/paxi-receive'
 import { Route as PaxiSendRouteImport } from './routes/paxi-send'
+import { Route as PricesRouteImport } from './routes/prices'
 import { Route as ReceiveParcelFormRouteImport } from './routes/receive-parcel-form'
 import { Route as RequestTypeRouteImport } from './routes/request-type'
 import { Route as ReviewsRouteImport } from './routes/reviews'
@@ -41,6 +43,11 @@ const AboutRoute = AboutRouteImport.update({
 const ClientHomeRoute = ClientHomeRouteImport.update({
   id: '/client-home',
   path: '/client-home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DriverControlCenterRoute = DriverControlCenterRouteImport.update({
@@ -93,6 +100,11 @@ const PaxiSendRoute = PaxiSendRouteImport.update({
   path: '/paxi-send',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PricesRoute = PricesRouteImport.update({
+  id: '/prices',
+  path: '/prices',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReceiveParcelFormRoute = ReceiveParcelFormRouteImport.update({
   id: '/receive-parcel-form',
   path: '/receive-parcel-form',
@@ -123,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/client-home': typeof ClientHomeRoute
+  '/dashboard': typeof DashboardRoute
   '/driver-control-center': typeof DriverControlCenterRoute
   '/driver-dashboard': typeof DriverDashboardRoute
   '/driver-home': typeof DriverHomeRoute
@@ -133,6 +146,7 @@ export interface FileRoutesByFullPath {
   '/paxi-form': typeof PaxiFormRoute
   '/paxi-receive': typeof PaxiReceiveRoute
   '/paxi-send': typeof PaxiSendRoute
+  '/prices': typeof PricesRoute
   '/receive-parcel-form': typeof ReceiveParcelFormRoute
   '/request-type': typeof RequestTypeRoute
   '/reviews': typeof ReviewsRoute
@@ -143,6 +157,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/client-home': typeof ClientHomeRoute
+  '/dashboard': typeof DashboardRoute
   '/driver-control-center': typeof DriverControlCenterRoute
   '/driver-dashboard': typeof DriverDashboardRoute
   '/driver-home': typeof DriverHomeRoute
@@ -153,6 +168,7 @@ export interface FileRoutesByTo {
   '/paxi-form': typeof PaxiFormRoute
   '/paxi-receive': typeof PaxiReceiveRoute
   '/paxi-send': typeof PaxiSendRoute
+  '/prices': typeof PricesRoute
   '/receive-parcel-form': typeof ReceiveParcelFormRoute
   '/request-type': typeof RequestTypeRoute
   '/reviews': typeof ReviewsRoute
@@ -164,6 +180,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/client-home': typeof ClientHomeRoute
+  '/dashboard': typeof DashboardRoute
   '/driver-control-center': typeof DriverControlCenterRoute
   '/driver-dashboard': typeof DriverDashboardRoute
   '/driver-home': typeof DriverHomeRoute
@@ -174,6 +191,7 @@ export interface FileRoutesById {
   '/paxi-form': typeof PaxiFormRoute
   '/paxi-receive': typeof PaxiReceiveRoute
   '/paxi-send': typeof PaxiSendRoute
+  '/prices': typeof PricesRoute
   '/receive-parcel-form': typeof ReceiveParcelFormRoute
   '/request-type': typeof RequestTypeRoute
   '/reviews': typeof ReviewsRoute
@@ -186,6 +204,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/client-home'
+    | '/dashboard'
     | '/driver-control-center'
     | '/driver-dashboard'
     | '/driver-home'
@@ -196,6 +215,7 @@ export interface FileRouteTypes {
     | '/paxi-form'
     | '/paxi-receive'
     | '/paxi-send'
+    | '/prices'
     | '/receive-parcel-form'
     | '/request-type'
     | '/reviews'
@@ -206,6 +226,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/client-home'
+    | '/dashboard'
     | '/driver-control-center'
     | '/driver-dashboard'
     | '/driver-home'
@@ -216,6 +237,7 @@ export interface FileRouteTypes {
     | '/paxi-form'
     | '/paxi-receive'
     | '/paxi-send'
+    | '/prices'
     | '/receive-parcel-form'
     | '/request-type'
     | '/reviews'
@@ -226,6 +248,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/client-home'
+    | '/dashboard'
     | '/driver-control-center'
     | '/driver-dashboard'
     | '/driver-home'
@@ -236,6 +259,7 @@ export interface FileRouteTypes {
     | '/paxi-form'
     | '/paxi-receive'
     | '/paxi-send'
+    | '/prices'
     | '/receive-parcel-form'
     | '/request-type'
     | '/reviews'
@@ -247,6 +271,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ClientHomeRoute: typeof ClientHomeRoute
+  DashboardRoute: typeof DashboardRoute
   DriverControlCenterRoute: typeof DriverControlCenterRoute
   DriverDashboardRoute: typeof DriverDashboardRoute
   DriverHomeRoute: typeof DriverHomeRoute
@@ -257,6 +282,7 @@ export interface RootRouteChildren {
   PaxiFormRoute: typeof PaxiFormRoute
   PaxiReceiveRoute: typeof PaxiReceiveRoute
   PaxiSendRoute: typeof PaxiSendRoute
+  PricesRoute: typeof PricesRoute
   ReceiveParcelFormRoute: typeof ReceiveParcelFormRoute
   RequestTypeRoute: typeof RequestTypeRoute
   ReviewsRoute: typeof ReviewsRoute
@@ -285,6 +311,13 @@ declare module '@tanstack/react-router' {
       path: '/client-home'
       fullPath: '/client-home'
       preLoaderRoute: typeof ClientHomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/driver-control-center': {
@@ -357,6 +390,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PaxiSendRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/prices': {
+      id: '/prices'
+      path: '/prices'
+      fullPath: '/prices'
+      preLoaderRoute: typeof PricesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/receive-parcel-form': {
       id: '/receive-parcel-form'
       path: '/receive-parcel-form'
@@ -399,6 +439,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ClientHomeRoute: ClientHomeRoute,
+  DashboardRoute: DashboardRoute,
   DriverControlCenterRoute: DriverControlCenterRoute,
   DriverDashboardRoute: DriverDashboardRoute,
   DriverHomeRoute: DriverHomeRoute,
@@ -409,6 +450,7 @@ const rootRouteChildren: RootRouteChildren = {
   PaxiFormRoute: PaxiFormRoute,
   PaxiReceiveRoute: PaxiReceiveRoute,
   PaxiSendRoute: PaxiSendRoute,
+  PricesRoute: PricesRoute,
   ReceiveParcelFormRoute: ReceiveParcelFormRoute,
   RequestTypeRoute: RequestTypeRoute,
   ReviewsRoute: ReviewsRoute,
