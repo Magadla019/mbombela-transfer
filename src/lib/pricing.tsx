@@ -7,7 +7,7 @@ export type PriceRow = Tables<'app_pricing'>;
 export type PriceMap = Record<string, PriceRow>;
 
 export const priceName: Record<string, string> = {
-  'paxi:small_bag': 'PAXI Small Bag', 'paxi:medium_bag': 'PAXI Medium Bag', 'paxi:large_bag': 'PAXI Large Bag', 'paxi:xl_bag': 'PAXI XL Bag', 'paxi:receive': 'PAXI Receive',
+  'paxi:small_bag': 'PAXI Small Bag', 'paxi:medium_bag': 'PAXI Medium Bag', 'paxi:large_bag': 'PAXI Large Bag', 'paxi:xl_bag': 'PAXI XL Bag',
   'food_delivery:base': 'Food Delivery', 'receive_package:base': 'Receive Package', 'send_package:base': 'Send Package',
 };
 
