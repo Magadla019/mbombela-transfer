@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 const bikeIcon = L.divIcon({ className: 'live-bike', html: '<span>🏍</span>', iconSize: [42, 42], iconAnchor: [21, 21] });
 const pinIcon = L.divIcon({ className: 'live-destination', html: '<span>●</span>', iconSize: [32, 32], iconAnchor: [16, 16] });
 function Follow({ position, follow }: { position: [number, number]; follow: boolean }) { const map = useMap(); useEffect(() => { if (follow) map.flyTo(position, 15, { duration: 1.2 }); }, [position, follow, map]); return null; }
-function Frame({points}: {points:[number,number][]}) { const map=useMap(); useEffect(()=>{if(points.length>1)map.fitBounds(points,{padding:[32,32],maxZoom:15});else if(points.length)map.setView(points[0],15)},[map,points.map(p=>p.join(',')).join(';')]);return null; }
+function Frame({points}: {points:[number,number][]}) { const map=useMap(); useEffect(()=>{if(points.length>1)map.fitBounds(points,{padding:[32,32],maxZoom:15});else if(points[0])map.setView(points[0],15)},[map,points.map(p=>p.join(',')).join(';')]);return null; }
 
 export function TransferMap({ driverLocation, destination }: { driverLocation: {lat:number;lng:number}|undefined; destination?: {lat:number;lng:number} }) {
   const [follow, setFollow] = useState(false);

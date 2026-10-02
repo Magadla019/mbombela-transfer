@@ -28,11 +28,11 @@ export function RestaurantMenu({ brand, logo, onClose }: { brand: string; logo: 
     const channel = supabase.channel(`menu-${slug}-${crypto.randomUUID()}`).on('postgres_changes', { event: '*', schema: 'public', table: 'restaurant_menus', filter: `restaurant_slug=eq.${slug}` }, () => { void load(); }).subscribe();
     return () => { alive = false; void supabase.removeChannel(channel); };
   }, [brand]);
-  const chosen = useMemo(() => items.filter(item => quantities[item.id] > 0), [items, quantities]);
-  const total = chosen.reduce((sum, item) => sum + Number(item.price) * quantities[item.id], 0);
-  const count = chosen.reduce((sum, item) => sum + quantities[item.id], 0);
+  const chosen = useMemo(() => items.filter(item => (quantities[item.id] ?? 0) > 0), [items, quantities]);
+  const total = chosen.reduce((sum, item) => sum + Number(item.price) * (quantities[item.id] ?? 0), 0);
+  const count = chosen.reduce((sum, item) => sum + (quantities[item.id] ?? 0), 0);
   const add = () => {
-    const selection = chosen.map(item => `${quantities[item.id]}× ${item.item_name}`).join(', ');
+    const selection = chosen.map(item => `${quantities[item.id] ?? 0}× ${item.item_name}`).join(', ');
     onClose();
     navigate({ to: '/food-order-form', search: { brand, items: selection, itemPrice: total.toFixed(2) } });
   };
