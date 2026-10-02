@@ -30,8 +30,8 @@ const priceKey: Record<string, [string, string, number]> = {
   send: ['send_package', 'base', 40],
   receive: ['receive_package', 'base', 40],
   food: ['food_delivery', 'base', 35],
-  paxi: ['paxi', 'receive', 50],
-  paxi_receive: ['paxi', 'receive', 50],
+  paxi: ['receive_package', 'base', 40],
+  paxi_receive: ['receive_package', 'base', 40],
 };
 
 export const createOrder = createServerFn({ method: 'POST' })
