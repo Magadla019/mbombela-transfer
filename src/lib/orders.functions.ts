@@ -30,8 +30,8 @@ const priceKey: Record<string, [string, string, number]> = {
   send: ['send_package', 'base', 40],
   receive: ['receive_package', 'base', 40],
   food: ['food_delivery', 'base', 35],
-  paxi: ['receive_package', 'base', 40],
-  paxi_receive: ['receive_package', 'base', 40],
+  paxi: ['paxi_receive_delivery', 'base', 40],
+  paxi_receive: ['paxi_receive_delivery', 'base', 40],
 };
 
 export const createOrder = createServerFn({ method: 'POST' })
@@ -47,7 +47,11 @@ export const createOrder = createServerFn({ method: 'POST' })
       cat = 'paxi'; sub = `${bag}_bag`; fallback = PAXI_BAGS[bag as keyof typeof PAXI_BAGS]; prefix = 'MB-PAXI-S-';
     }
     const { data: p } = await db.from('app_pricing').select('price').eq('category', cat).eq('sub_category', sub).eq('is_active', true).maybeSingle();
-    const amount = p ? Number(p.price) : fallback;
+    let amount = p ? Number(p.price) : fallback;
+    if (data.order_type === 'paxi_send') {
+      const { data: fee } = await db.from('app_pricing').select('price').eq('category', 'paxi_send_delivery').eq('sub_category', 'base').eq('is_active', true).maybeSingle();
+      amount += fee ? Number(fee.price) : 40;
+    }
     const order_number = prefix + Date.now();
     const { data: row, error } = await db
       .from('orders')

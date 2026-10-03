@@ -8,7 +8,7 @@ export type PriceMap = Record<string, PriceRow>;
 
 export const priceName: Record<string, string> = {
   'paxi:small_bag': 'PAXI Small Bag', 'paxi:medium_bag': 'PAXI Medium Bag', 'paxi:large_bag': 'PAXI Large Bag', 'paxi:xl_bag': 'PAXI XL Bag',
-  'food_delivery:base': 'Food Delivery', 'receive_package:base': 'Receive Package', 'send_package:base': 'Send Package',
+  'paxi_send_delivery:base': 'PAXI Send Delivery', 'paxi_receive_delivery:base': 'PAXI Receive Delivery', 'food_delivery:base': 'Food Delivery', 'receive_package:base': 'Receive Package', 'send_package:base': 'Send Package',
 };
 
 // Public prices, updated live when the partner changes them.
