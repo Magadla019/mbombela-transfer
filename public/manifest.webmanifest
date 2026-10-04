@@ -1,0 +1,23 @@
+{
+  "name": "Mbombela Transfer",
+  "short_name": "Mbombela",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0A0A0A",
+  "theme_color": "#E10600",
+  "icons": [
+    {
+      "src": "/__l5e/assets-v1/682584aa-39d6-406d-8839-efaa66d737d6/mb-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/__l5e/assets-v1/4dec9174-59ea-4703-945d-0cfa0aeed1e4/mb-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
