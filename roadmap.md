@@ -14,4 +14,4 @@
 - [x] Update nine price fields and PAXI totals without deleting data.
 - [x] Add manifest-only home-screen installation.
 - [ ] Add safe notification opt-in and delivery reminders.
-- [ ] Review publishing safety and request production deployment.
+- [ ] Production deployment is awaiting approval; the publish request was declined.
