@@ -10,7 +10,8 @@
 - [ ] Finish security review and end-to-end order/location tests; desktop/mobile visual checks passed.
 - [ ] Publish the requested single final deployment after live menus, licensed food photography, private chat, and verified tracking are complete.
 
-- [ ] Match the new login references and use the supplied rider photo.
-- [ ] Update nine price fields and PAXI totals without deleting data.
-- [ ] Add home-screen installation and safe notification opt-in.
+- [x] Match the new login references and use the supplied rider photo.
+- [x] Update nine price fields and PAXI totals without deleting data.
+- [x] Add manifest-only home-screen installation.
+- [ ] Add safe notification opt-in and delivery reminders.
 - [ ] Review publishing safety and request production deployment.

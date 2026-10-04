@@ -11,6 +11,8 @@ import {
 import { useEffect, type ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { GlobalClientPopups } from "@/components/GlobalClientPopups";
+import { PWAInstallBanner } from "@/components/PWAInstallBanner";
+import icon192 from "@/assets/mb-icon-192.png.asset.json";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -80,6 +82,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+       { name: "theme-color", content: "#E10600" },
       { title: "Mbombela Transfer" },
       { name: "description", content: "Local delivery across Nelspruit and Mbombela." },
       { property: "og:title", content: "Mbombela Transfer" },
@@ -93,6 +96,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+       { rel: "manifest", href: "/manifest.webmanifest" },
+       { rel: "apple-touch-icon", href: icon192.url },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" },
@@ -126,6 +131,7 @@ function RootComponent() {
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
       <GlobalClientPopups />
+       <PWAInstallBanner />
       <Toaster position="top-right" richColors />
     </QueryClientProvider>
   );
