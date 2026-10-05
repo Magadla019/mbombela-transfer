@@ -1,0 +1,11 @@
+CREATE TABLE public.driver_locations (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), driver_id uuid NOT NULL, order_id uuid NOT NULL UNIQUE, lat numeric NOT NULL, lng numeric NOT NULL, heading numeric, updated_at timestamptz NOT NULL DEFAULT now());
+GRANT ALL ON public.driver_locations TO service_role;
+ALTER TABLE public.driver_locations ENABLE ROW LEVEL SECURITY;
+CREATE TABLE public.conversations (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), client_id uuid NOT NULL UNIQUE, partner_id text NOT NULL DEFAULT 'partner', order_id uuid, client_name text, last_message text, updated_at timestamptz NOT NULL DEFAULT now());
+GRANT ALL ON public.conversations TO service_role;
+ALTER TABLE public.conversations ENABLE ROW LEVEL SECURITY;
+CREATE TABLE public.messages (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), conversation_id uuid NOT NULL REFERENCES public.conversations(id) ON DELETE CASCADE, sender_id text NOT NULL, text text, image_url text, voice_url text, is_read boolean NOT NULL DEFAULT false, created_at timestamptz NOT NULL DEFAULT now());
+GRANT ALL ON public.messages TO service_role;
+ALTER TABLE public.messages ENABLE ROW LEVEL SECURITY;
+CREATE INDEX messages_conv_idx ON public.messages(conversation_id, created_at);
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS dest_lat numeric, ADD COLUMN IF NOT EXISTS dest_lng numeric, ADD COLUMN IF NOT EXISTS pickup_lat numeric, ADD COLUMN IF NOT EXISTS pickup_lng numeric;

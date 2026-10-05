@@ -66,7 +66,7 @@ export const createOrder = createServerFn({ method: 'POST' })
     return row;
   });
 
-const publicCols = 'id, order_number, pickup_address, delivery_address, order_type, brand, amount, status, payment_method, driver_name, driver_phone, driver_lat, driver_lng, distance, eta, status_times, created_at, updated_at, completed_at, client_popup_shown, client_popup_state';
+const publicCols = 'id, order_number, pickup_address, delivery_address, order_type, brand, amount, status, payment_method, driver_name, driver_phone, driver_lat, driver_lng, dest_lat, dest_lng, pickup_lat, pickup_lng, distance, eta, status_times, created_at, updated_at, completed_at, client_popup_shown, client_popup_state';
 
 export const getOrder = createServerFn({ method: 'GET' })
   .inputValidator((d) => z.object({ id: z.string().uuid() }).parse(d))
@@ -93,6 +93,15 @@ export const markClientPopupShown = createServerFn({ method: 'POST' })
     await db.from('orders').update({ client_popup_shown: true }).eq('id', data.id).eq('status', 'completed');
     return { ok: true };
   });
+
+async function geocode(address?: string | null) {
+  if (!address) return null;
+  try {
+    const r = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=za&q=${encodeURIComponent(address + ', Mpumalanga')}`, { headers: { 'User-Agent': 'MbombelaTransfer/1.0' }, signal: AbortSignal.timeout(8000) });
+    const j = (await r.json()) as { lat: string; lon: string }[];
+    return j[0] ? { lat: Number(j[0].lat), lng: Number(j[0].lon) } : null;
+  } catch { return null; }
+}
 
 async function setStatus(id: string, from: string[], status: string, patch: Database['public']['Tables']['orders']['Update'] = {}) {
   const db = await admin();
@@ -170,6 +179,7 @@ export const driverAction = createServerFn({ method: 'POST' })
       action: z.enum(['accept', 'picked', 'delivering', 'arrived', 'cancel', 'location', 'money_received']),
       lat: z.number().min(-90).max(90).optional(),
       lng: z.number().min(-180).max(180).optional(),
+      heading: z.number().min(0).max(360).nullable().optional(),
     }).parse(d),
   )
   .handler(async ({ data }) => {
@@ -186,6 +196,7 @@ export const driverAction = createServerFn({ method: 'POST' })
     if (data.action === 'location' && (data.lat == null || data.lng == null)) throw new Error('Location required');
     if (data.lat != null && data.lng != null) {
       await db.from('drivers_live').upsert({ driver_id: driverId, lat: data.lat, lng: data.lng, is_online: true, updated_at: now() });
+      if (data.action !== 'accept' ? current.driver_id === driverId : true) await db.from('driver_locations').upsert({ driver_id: driverId, order_id: data.id, lat: data.lat, lng: data.lng, heading: data.heading ?? null, updated_at: now() }, { onConflict: 'order_id' });
     }
     if (data.action === 'accept') {
       const { data: me } = await db.from('driver_access').select('driver_name, driver_phone').eq('id', driverId).single();
@@ -196,6 +207,9 @@ export const driverAction = createServerFn({ method: 'POST' })
         .update({ driver_id: driverId, driver_name: me?.driver_name ?? 'Driver', driver_phone: me?.driver_phone ?? null, assigned_at: now(), status: 'accepted', status_times: times, ...pos })
         .eq('id', data.id).eq('status', 'pending').is('driver_id', null).select('id');
       if (!taken?.length) throw new Error('Already taken');
+      const { data: addr } = await db.from('orders').select('pickup_address, delivery_address').eq('id', data.id).single();
+      const [pick, dest] = await Promise.all([geocode(addr?.pickup_address), geocode(addr?.delivery_address)]);
+      await db.from('orders').update({ pickup_lat: pick?.lat ?? null, pickup_lng: pick?.lng ?? null, dest_lat: dest?.lat ?? null, dest_lng: dest?.lng ?? null }).eq('id', data.id);
       return { ok: true };
     }
     if (current.driver_id !== driverId) throw new Error('This order belongs to another driver');

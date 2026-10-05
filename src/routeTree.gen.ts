@@ -18,6 +18,7 @@ import { Route as DriverDashboardRouteImport } from './routes/driver-dashboard'
 import { Route as DriverHomeRouteImport } from './routes/driver-home'
 import { Route as FoodOrderFormRouteImport } from './routes/food-order-form'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as MessagesRouteImport } from './routes/messages'
 import { Route as OrderHistoryRouteImport } from './routes/order-history'
 import { Route as PartnerDashboardRouteImport } from './routes/partner-dashboard'
 import { Route as PaxiFormRouteImport } from './routes/paxi-form'
@@ -73,6 +74,11 @@ const FoodOrderFormRoute = FoodOrderFormRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MessagesRoute = MessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OrderHistoryRoute = OrderHistoryRouteImport.update({
@@ -141,6 +147,7 @@ export interface FileRoutesByFullPath {
   '/driver-home': typeof DriverHomeRoute
   '/food-order-form': typeof FoodOrderFormRoute
   '/login': typeof LoginRoute
+  '/messages': typeof MessagesRoute
   '/order-history': typeof OrderHistoryRoute
   '/partner-dashboard': typeof PartnerDashboardRoute
   '/paxi-form': typeof PaxiFormRoute
@@ -163,6 +170,7 @@ export interface FileRoutesByTo {
   '/driver-home': typeof DriverHomeRoute
   '/food-order-form': typeof FoodOrderFormRoute
   '/login': typeof LoginRoute
+  '/messages': typeof MessagesRoute
   '/order-history': typeof OrderHistoryRoute
   '/partner-dashboard': typeof PartnerDashboardRoute
   '/paxi-form': typeof PaxiFormRoute
@@ -186,6 +194,7 @@ export interface FileRoutesById {
   '/driver-home': typeof DriverHomeRoute
   '/food-order-form': typeof FoodOrderFormRoute
   '/login': typeof LoginRoute
+  '/messages': typeof MessagesRoute
   '/order-history': typeof OrderHistoryRoute
   '/partner-dashboard': typeof PartnerDashboardRoute
   '/paxi-form': typeof PaxiFormRoute
@@ -210,6 +219,7 @@ export interface FileRouteTypes {
     | '/driver-home'
     | '/food-order-form'
     | '/login'
+    | '/messages'
     | '/order-history'
     | '/partner-dashboard'
     | '/paxi-form'
@@ -232,6 +242,7 @@ export interface FileRouteTypes {
     | '/driver-home'
     | '/food-order-form'
     | '/login'
+    | '/messages'
     | '/order-history'
     | '/partner-dashboard'
     | '/paxi-form'
@@ -254,6 +265,7 @@ export interface FileRouteTypes {
     | '/driver-home'
     | '/food-order-form'
     | '/login'
+    | '/messages'
     | '/order-history'
     | '/partner-dashboard'
     | '/paxi-form'
@@ -277,6 +289,7 @@ export interface RootRouteChildren {
   DriverHomeRoute: typeof DriverHomeRoute
   FoodOrderFormRoute: typeof FoodOrderFormRoute
   LoginRoute: typeof LoginRoute
+  MessagesRoute: typeof MessagesRoute
   OrderHistoryRoute: typeof OrderHistoryRoute
   PartnerDashboardRoute: typeof PartnerDashboardRoute
   PaxiFormRoute: typeof PaxiFormRoute
@@ -353,6 +366,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/messages': {
+      id: '/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof MessagesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/order-history': {
@@ -445,6 +465,7 @@ const rootRouteChildren: RootRouteChildren = {
   DriverHomeRoute: DriverHomeRoute,
   FoodOrderFormRoute: FoodOrderFormRoute,
   LoginRoute: LoginRoute,
+  MessagesRoute: MessagesRoute,
   OrderHistoryRoute: OrderHistoryRoute,
   PartnerDashboardRoute: PartnerDashboardRoute,
   PaxiFormRoute: PaxiFormRoute,
