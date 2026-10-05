@@ -44,6 +44,36 @@ export type Database = {
         }
         Relationships: []
       }
+      conversations: {
+        Row: {
+          client_id: string
+          client_name: string | null
+          id: string
+          last_message: string | null
+          order_id: string | null
+          partner_id: string
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          client_name?: string | null
+          id?: string
+          last_message?: string | null
+          order_id?: string | null
+          partner_id?: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          client_name?: string | null
+          id?: string
+          last_message?: string | null
+          order_id?: string | null
+          partner_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       driver_access: {
         Row: {
           created_at: string
@@ -77,6 +107,36 @@ export type Database = {
           password?: string
           total_completed?: number
           total_income?: number
+        }
+        Relationships: []
+      }
+      driver_locations: {
+        Row: {
+          driver_id: string
+          heading: number | null
+          id: string
+          lat: number
+          lng: number
+          order_id: string
+          updated_at: string
+        }
+        Insert: {
+          driver_id: string
+          heading?: number | null
+          id?: string
+          lat: number
+          lng: number
+          order_id: string
+          updated_at?: string
+        }
+        Update: {
+          driver_id?: string
+          heading?: number | null
+          id?: string
+          lat?: number
+          lng?: number
+          order_id?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -128,6 +188,47 @@ export type Database = {
         }
         Relationships: []
       }
+      messages: {
+        Row: {
+          conversation_id: string
+          created_at: string
+          id: string
+          image_url: string | null
+          is_read: boolean
+          sender_id: string
+          text: string | null
+          voice_url: string | null
+        }
+        Insert: {
+          conversation_id: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_read?: boolean
+          sender_id: string
+          text?: string | null
+          voice_url?: string | null
+        }
+        Update: {
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_read?: boolean
+          sender_id?: string
+          text?: string | null
+          voice_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
           amount: number
@@ -141,6 +242,8 @@ export type Database = {
           customer_phone: string | null
           delivery_address: string | null
           delivery_details: string | null
+          dest_lat: number | null
+          dest_lng: number | null
           distance: string | null
           driver_id: string | null
           driver_lat: number | null
@@ -161,6 +264,8 @@ export type Database = {
           payment_method: string
           pickup_address: string | null
           pickup_details: string | null
+          pickup_lat: number | null
+          pickup_lng: number | null
           proof_deleted_at: string | null
           proof_paths: string[]
           receiver_name: string | null
@@ -182,6 +287,8 @@ export type Database = {
           customer_phone?: string | null
           delivery_address?: string | null
           delivery_details?: string | null
+          dest_lat?: number | null
+          dest_lng?: number | null
           distance?: string | null
           driver_id?: string | null
           driver_lat?: number | null
@@ -202,6 +309,8 @@ export type Database = {
           payment_method?: string
           pickup_address?: string | null
           pickup_details?: string | null
+          pickup_lat?: number | null
+          pickup_lng?: number | null
           proof_deleted_at?: string | null
           proof_paths?: string[]
           receiver_name?: string | null
@@ -223,6 +332,8 @@ export type Database = {
           customer_phone?: string | null
           delivery_address?: string | null
           delivery_details?: string | null
+          dest_lat?: number | null
+          dest_lng?: number | null
           distance?: string | null
           driver_id?: string | null
           driver_lat?: number | null
@@ -243,6 +354,8 @@ export type Database = {
           payment_method?: string
           pickup_address?: string | null
           pickup_details?: string | null
+          pickup_lat?: number | null
+          pickup_lng?: number | null
           proof_deleted_at?: string | null
           proof_paths?: string[]
           receiver_name?: string | null

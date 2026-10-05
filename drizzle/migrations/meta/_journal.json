@@ -36,6 +36,13 @@
       "when": 1790847084279,
       "tag": "0004_restaurant_menu_catalogue",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791175532758,
+      "tag": "0005_chat_tracking",
+      "breakpoints": true
     }
   ]
 }
