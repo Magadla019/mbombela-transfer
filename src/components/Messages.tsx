@@ -46,7 +46,7 @@ function Thread({ messages, me, onSend }: { messages: Msg[]; me: string; onSend:
     <div className="flex items-center gap-2 border-t border-border bg-card p-2">
       <Button variant="ghost" size="icon" aria-label="Emoji" onClick={() => setEmoji((v) => !v)}><Smile /></Button>
       <Button variant="ghost" size="icon" aria-label="Send photo" onClick={() => file.current?.click()}><ImageIcon /></Button>
-      <input ref={file} type="file" accept="image/*" hidden onChange={async (e) => { const f = e.target.files?.[0]; e.target.value = ''; if (!f) return; if (f.size > 8_000_000) return toast.error('Photo too large (max 8MB)'); await go({ dataUrl: await toDataUrl(f), kind: 'image' }); }} />
+      <input ref={file} type="file" accept="image/*" hidden onChange={async (e) => { const f = e.target.files?.[0]; e.target.value = ''; if (!f) return; if (f.size > 8_000_000) { toast.error('Photo too large (max 8MB)'); return; } await go({ dataUrl: await toDataUrl(f), kind: 'image' }); }} />
       {rec ? <div className="flex-1 animate-pulse px-3 text-sm text-primary">● Recording… tap stop to send</div> : <input value={text} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') void go(); }} placeholder="Type a message" maxLength={2000} className="h-11 min-w-0 flex-1 rounded-full bg-secondary px-4 text-sm outline-none" />}
       {text.trim() && !rec ? <Button size="icon" disabled={busy} className="rounded-full bg-[var(--chat-sent)]" aria-label="Send" onClick={() => void go()}><Send /></Button>
         : <Button size="icon" disabled={busy} className="rounded-full bg-[var(--chat-sent)]" aria-label={rec ? 'Stop recording' : 'Record voice note'} onClick={record}>{rec ? <Square /> : <Mic />}</Button>}

@@ -11,7 +11,7 @@ const SOURCES: Record<string, string> = {
   mcdonalds: 'https://www.mcdonalds.co.za/menu',
 };
 
-type Found = { name: string; price: number; image?: string; description?: string };
+type Found = { name: string; price: number; image?: string | undefined; description?: string | undefined };
 function parse(html: string): Found[] {
   const out: Found[] = [];
   for (const m of html.matchAll(/<script[^>]+application\/ld\+json[^>]*>([\s\S]*?)<\/script>/gi)) {

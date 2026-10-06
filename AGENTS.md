@@ -17,3 +17,5 @@
 - Client order dashboard reads only order IDs retained on the placing device until account-bound ownership exists; this avoids broad public order queries that expose customer details.
 
 - Home-screen installation uses only a manifest and CDN-hosted icons, with no offline service worker, because preview and deployments must not serve stale pages.
+- Internal chat and driver_locations are private tables accessed only through server functions (client via signed-in session, partner via staff token) with 3s polling, because public read would expose private conversations and live rider positions.
+- Menu sync runs as a partner-triggered server function, not a Supabase edge function, per the TanStack server boundary.

@@ -15,3 +15,5 @@
 - [x] Add manifest-only home-screen installation.
 - [ ] Add safe notification opt-in and delivery reminders.
 - [ ] Production deployment is awaiting approval; the publish request was declined.
+- [x] Menu photos on all items, Sync Now button, private chat (/messages + partner Messages), satellite tracker with green route/progress, Google Maps on Start Pickup/Delivery, order ringing every 5 min + Test Sound.
+- [ ] Official restaurant sites must allow automated reading for Sync Now to update prices.
