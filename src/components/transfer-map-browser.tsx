@@ -33,7 +33,7 @@ function useSmooth(target: [number, number] | undefined) {
 function Follow({ position, follow }: { position: [number, number]; follow: boolean }) { const map = useMap(); useEffect(() => { if (follow) map.panTo(position); }, [position, follow, map]); return null; }
 function Frame({ points }: { points: [number, number][] }) { const map = useMap(); const key = points.map((p) => p.map((n) => n.toFixed(3)).join(',')).join(';'); useEffect(() => { if (points.length > 1) map.fitBounds(points, { padding: [40, 40], maxZoom: 16 }); else if (points[0]) map.setView(points[0], 16); }, [map, key]); return null; }
 
-export function TransferMap({ driverLocation, destination }: { driverLocation: LL; destination?: LL }) {
+export function TransferMap({ driverLocation, destination }: { driverLocation: LL; destination: LL }) {
   const [follow, setFollow] = useState(false);
   const [route, setRoute] = useState<[number, number][]>([]);
   const [startKm, setStartKm] = useState<number | null>(null);
